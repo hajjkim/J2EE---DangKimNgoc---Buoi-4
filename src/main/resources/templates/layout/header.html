@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<header th:fragment="header">
+  <nav class="navbar navbar-expand-lg navbar-dark shadow-sm"
+       style="background:#c87adf;">
+    <div class="container">
+
+      <!-- Brand -->
+      <a class="navbar-brand fw-bold d-flex align-items-center gap-2" th:href="@{/}">
+        <span style="width:10px;height:10px;background:#4ade80;border-radius:2px;display:inline-block"></span>
+        FAKE Store
+      </a>
+
+      <!-- Toggle -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Menu -->
+      <div class="collapse navbar-collapse" id="topNav">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/}">Trang chủ</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/products}">Products</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/categories}">Categories</a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </nav>
+</header>
+
+<!-- bootstrap js (nếu bạn chưa include ở nơi khác) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

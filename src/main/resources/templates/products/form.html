@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Product Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link th:href="@{/css/app.css}" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<div th:replace="layout/header :: header"></div>
+
+<div class="page py-4">
+  <div class="container">
+
+    <!-- Card center giống ảnh -->
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-8 col-xl-7">
+
+        <div class="card shadow-sm">
+          <div class="card-header bg-white">
+            <h5 class="mb-0 fw-semibold"
+                th:text="${product.id == null ? 'Thêm sản phẩm' : 'Sửa sản phẩm'}"></h5>
+          </div>
+
+          <div class="card-body p-4">
+
+            <form th:action="${product.id == null}
+                  ? @{/products/create}
+                  : @{/products/edit/{id}(id=${product.id})}"
+                  method="post"
+                  th:object="${product}"
+                  enctype="multipart/form-data">
+
+              <!-- TÊN SẢN PHẨM -->
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Tên sản phẩm</label>
+                <input class="form-control" type="text"
+                       th:field="*{name}" placeholder="VD: Chuột Logitech">
+                <div class="text-danger small mt-1"
+                     th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+              </div>
+
+              <!-- GIÁ + SỐ LƯỢNG -->
+              <div class="row g-3">
+                <div class="col-12 col-md-6">
+                  <label class="form-label fw-semibold">Giá</label>
+                  <input class="form-control" type="number"
+                         th:field="*{price}" placeholder="VD: 199000">
+                  <div class="text-danger small mt-1"
+                       th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <label class="form-label fw-semibold">Số lượng</label>
+                  <input class="form-control" type="number"
+                         th:field="*{quantity}" min="0" placeholder="VD: 10">
+                  <div class="text-danger small mt-1"
+                       th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}"></div>
+                </div>
+              </div>
+
+              <!-- DANH MỤC -->
+              <div class="mt-3">
+                <label class="form-label fw-semibold">Danh mục</label>
+                <select class="form-select" name="categoryId" required>
+                  <option value="">-- Chọn danh mục --</option>
+                  <option th:each="c : ${categories}"
+                          th:value="${c.id}"
+                          th:text="${c.name}"
+                          th:selected="${product.category != null and product.category.id == c.id}">
+                  </option>
+                </select>
+
+                <!-- lỗi validate category từ controller rejectValue("category", ...) -->
+                <div class="text-danger small mt-1"
+                     th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
+              </div>
+
+              <!-- ẢNH SẢN PHẨM -->
+              <div class="mt-3">
+                <label class="form-label fw-semibold">Ảnh sản phẩm</label>
+                <input class="form-control" type="file" name="imageFile" accept="image/*">
+
+                <!-- lỗi tên file ảnh > 200 -->
+                <div class="text-danger small mt-1"
+                     th:if="${#fields.hasErrors('imageName')}" th:errors="*{imageName}"></div>
+
+                <!-- ảnh hiện tại (nếu có) -->
+                <div class="mt-2" th:if="${product.imageName != null}">
+                  <img th:src="@{'/uploads/' + ${product.imageName}}"
+                       alt="current-image"
+                       style="max-height:120px; border:1px solid #eee; border-radius:8px; padding:4px;">
+                </div>
+              </div>
+
+              <!-- MÔ TẢ -->
+              <div class="mt-3">
+                <label class="form-label fw-semibold">Mô tả</label>
+                <textarea class="form-control" rows="4"
+                          th:field="*{description}"
+                          placeholder="Mô tả ngắn..."></textarea>
+
+                <!-- nếu bạn có validate description thì giữ lỗi, không có thì bỏ -->
+                <div class="text-danger small mt-1"
+                     th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+              </div>
+
+              <!-- BUTTONS -->
+              <div class="mt-4 d-flex gap-2">
+                <button class="btn btn-primary"
+                        type="submit"
+                        th:text="${product.id == null ? 'Thêm mới' : 'Cập nhật'}"></button>
+
+                <a class="btn btn-outline-secondary" th:href="@{/products}">Quay lại</a>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Sản phẩm</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- CSS chung -->
+  <link th:href="@{/css/app.css}" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<!-- HEADER -->
+<div th:replace="layout/header :: header"></div>
+
+<div class="container py-4">
+
+  <!-- CARD -->
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body p-4">
+
+      <!-- TITLE -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold mb-0">📦 Sản phẩm</h5>
+        <a class="btn btn-primary btn-sm"
+           th:href="@{/products/create}">
+          ➕ Thêm sản phẩm
+        </a>
+      </div>
+
+      <!-- ALERT -->
+      <div class="alert alert-success py-2"
+           th:if="${param.success}">
+        ✔ Thêm sản phẩm thành công!
+      </div>
+
+      <!-- TABLE -->
+      <div class="table-responsive">
+        <table class="table align-middle mb-0">
+          <thead class="table-light">
+          <tr>
+            <th style="width:60px">ID</th>
+            <th>Tên</th>
+            <th style="width:120px">Giá</th>
+            <th style="width:80px">SL</th>
+            <th style="width:160px">Danh mục</th>
+            <th style="width:120px">Ảnh</th>
+            <th style="width:160px">Hành động</th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr th:each="p : ${products}">
+            <td th:text="${p.id}"></td>
+
+            <!-- NAME -->
+            <td>
+              <div class="fw-semibold" th:text="${p.name}"></div>
+              <div class="text-muted small">—</div>
+            </td>
+
+            <!-- PRICE -->
+            <td th:text="${#numbers.formatDecimal(p.price,0,'COMMA',0,'POINT')} + ' ₫'"></td>
+
+            <!-- SL -->
+<td th:text="${p.quantity != null ? p.quantity : 0}"></td>
+
+            <!-- CATEGORY -->
+            <td th:text="${p.category != null ? p.category.name : ''}"></td>
+
+            <!-- IMAGE -->
+            <td>
+              <img th:if="${p.imageName != null}"
+                   th:src="@{'/uploads/' + ${p.imageName}}"
+                   style="width:60px;height:60px;object-fit:cover;border-radius:8px;border:1px solid #eee">
+              <span th:if="${p.imageName == null}" class="text-muted small">No image</span>
+            </td>
+
+            <!-- ACTION -->
+            <td>
+              <a class="btn btn-outline-primary btn-sm"
+                 th:href="@{/products/edit/{id}(id=${p.id})}">
+                ✏ Sửa
+              </a>
+
+              <form th:action="@{/products/delete/{id}(id=${p.id})}"
+                    method="post" class="d-inline">
+                <button class="btn btn-danger btn-sm"
+                        onclick="return confirm('Xóa sản phẩm này?')">
+                  🗑 Xóa
+                </button>
+              </form>
+            </td>
+          </tr>
+
+          <tr th:if="${#lists.isEmpty(products)}">
+            <td colspan="7" class="text-center text-muted py-4">
+              Chưa có sản phẩm nào
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>
